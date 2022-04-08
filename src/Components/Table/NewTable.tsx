@@ -53,16 +53,21 @@ export default function NewTable({ data }: Props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {_DATA.currentData().map((v: any) => (
+            {_DATA.currentData().map((v: any, index: number) => (
               <TableRow key={v?.title}>
-                <TableCell component="th" scope="row">
+                <TableCell
+                  component="th"
+                  scope="row"
+                  data-testid={`row-${index}`}
+                >
                   {v?.title}
                 </TableCell>
                 <TableCell align="right">{v?.created_at}</TableCell>
                 <TableCell align="right">{v?.url}</TableCell>
                 <TableCell align="right">{v?.author}</TableCell>
-                <TableCell align="right" data-testid="details-button">
+                <TableCell align="right">
                   <Button
+                    data-testid="details-button"
                     variant="contained"
                     onClick={() => {
                       /* alert(JSON.stringify(row)); */

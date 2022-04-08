@@ -13,6 +13,7 @@ export default function JSON({ rows }: Props) {
 
   return (
     <div>
+      <h1>row json page</h1>
       <pre>{window.JSON.stringify(obj, null, 2)}</pre>
     </div>
   );

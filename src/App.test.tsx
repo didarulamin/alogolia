@@ -1,5 +1,5 @@
 import React from "react";
-import { findAllByText, render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import App from "./App";
 
 test("All table column name should display correctly", () => {
