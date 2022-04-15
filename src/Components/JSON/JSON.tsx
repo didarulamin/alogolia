@@ -5,7 +5,6 @@ interface Props {
   rows: {}[];
 }
 export default function JSON({ rows }: Props) {
-  console.log(rows, "rows");
   const { postId } = useParams();
   console.log(postId, "title");
 
@@ -14,7 +13,7 @@ export default function JSON({ rows }: Props) {
   return (
     <div>
       <h1>row json page</h1>
-      <pre>{window.JSON.stringify(obj, null, 2)}</pre>
+      <pre data-testid="json-data">{window.JSON.stringify(obj, null, 2)}</pre>
     </div>
   );
 }

@@ -11,11 +11,11 @@ function App() {
   const [page, setPage] = React.useState<number>(1);
 
   useEffect(() => {
-    if (count === page) {
+    /*    if (count === page) {
       return;
-    } else {
-      var handle = setInterval(getEmployeesCount, 10000);
-    }
+    } else { */
+    var handle = setInterval(getEmployeesCount, 10000);
+    // }
     return () => {
       clearInterval(handle);
     };
