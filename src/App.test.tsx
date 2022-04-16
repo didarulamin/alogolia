@@ -778,38 +778,15 @@ test("waits 10 second before loading new data and rerender", () => {
   render(<App />);
   const doAsync = () => {
     setInterval(async () => {
-      // expect(setInterval).toHaveBeenCalledTimes(1);
-
       const output = await waitFor(() => {
         return screen.findByText(
           "Better Clouds Than Ever with New Exascale Computing-Ready Atmosphere Model"
         );
       });
-      console.log(output);
-      expect(output).toBeInTheDocument();
 
-      // expect(setInterval).toHaveBeenCalledTimes(1);
+      expect(output).toBeInTheDocument();
     }, 10000);
   };
 
-  /*  jest.useFakeTimers();
-  jest.spyOn(React, "useEffect").mockImplementation((f) => f());
-  jest.spyOn(global, "setInterval"); */
-  // jest.advanceTimersByTime(10000);
-  // jest.runAllTimers();
-  // jest.runOnlyPendingTimers();
-  // expect(setInterval).toHaveBeenCalledTimes(1);
-  // jest.useRealTimers();
-  /* expect(setTimeout).toHaveBeenLastCalledWith(
-    expect(setTimeout).toHaveBeenCalledTimes(50),
-    10000
-  ); */
-
-  /* const callback1 = () => {
-    return true;
-  }; */
-
   doAsync();
-
-  // jest.useRealTimers();
 });
