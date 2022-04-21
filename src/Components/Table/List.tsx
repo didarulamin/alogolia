@@ -9,49 +9,50 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import { Pagination, PaginationItem, TableContainer } from "@mui/material";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import { TableContainer } from "@mui/material";
+import React, { useState, useEffect } from "react";
 // import { Pagination } from "@material-ui/lab";
-import usePagination from "../../hooks/pagination";
-import { Link, useNavigate, useParams } from "react-router-dom";
-
-interface Props {
-  data: {}[];
-}
-
+//   import usePagination from "../../hooks/pagination";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+/*  interface Props {
+    data: {}[];
+  }
+   */
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
 });
 
-export default function NewTable({ data }: Props) {
-  const { pageId } = useParams() as {
-    pageId: string;
-  };
-
+export default function NewList() {
+  const [data, setData] = useState<{}[]>([]);
   const classes = useStyles();
   const navigate = useNavigate();
+  const { pageId = 0 } = useParams();
+  console.log(pageId);
 
-  const PER_PAGE = 20;
+  /*   let [page, setPage] = useState<number>(1);
+    const PER_PAGE = 20; */
 
-  const count = Math.ceil(data.length / PER_PAGE);
-  const { currentPage, currentData, setCurrentPage, jump } = usePagination(
-    data,
-    PER_PAGE
-  );
+  /*  const count = Math.ceil(data.length / PER_PAGE);
+    const _DATA = usePagination(data, PER_PAGE); */
 
-  const handleChange = (e: React.ChangeEvent<unknown>, p: number) => {
-    setCurrentPage(p);
-    jump(p);
-  };
+  /*  const handleChange = (e: React.ChangeEvent<unknown>, p: number) => {
+      setPage(p);
+      _DATA.jump(p);
+    }; */
 
-  useLayoutEffect(() => {
-    if (pageId) {
-      setCurrentPage(parseInt(pageId));
-      jump(parseInt(pageId));
-    }
-  }, [pageId, jump, setCurrentPage]);
+  useEffect(() => {
+    axios
+      .get(
+        `https://hn.algolia.com/api/v1/search_by_date/?tags=story&page=${pageId}`
+      )
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data.hits);
+      });
+  }, [pageId]);
 
   return (
     <Box p="20">
@@ -67,7 +68,7 @@ export default function NewTable({ data }: Props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {currentData().map((v: any, index: number) => (
+            {data.map((v: any, index: number) => (
               <TableRow key={v?.title}>
                 <TableCell
                   component="th"
@@ -96,24 +97,6 @@ export default function NewTable({ data }: Props) {
           </TableBody>
         </Table>
       </TableContainer>
-
-      <Box display="flex" justifyContent="center" alignItems="center">
-        <Pagination
-          count={count}
-          size="large"
-          page={currentPage}
-          variant="outlined"
-          shape="rounded"
-          onChange={handleChange}
-          renderItem={(item) => (
-            <PaginationItem
-              component={Link}
-              to={`/page/${item.page}`}
-              {...item}
-            />
-          )}
-        />
-      </Box>
     </Box>
   );
 }

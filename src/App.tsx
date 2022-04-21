@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
+// import NewList from "./Components/Table/List";
 import JSON from "./Components/JSON/JSON";
 import NewTable from "./Components/Table/NewTable";
+// import PaginationLink from "./Components/Table/RoutePagination";
 // import SimpleTable from "./Components/Table/Table";
 
 function App() {
@@ -22,7 +24,7 @@ function App() {
   });
 
   useEffect(() => {
-    fetch("https://hn.algolia.com/api/v1/search_by_date?tags=story&page=0")
+    fetch("https://hn.algolia.com/api/v1/search_by_date/?tags=story&page=0")
       .then((res) => res.json())
       .then((result) => {
         const { hits, nbPages } = result;
@@ -38,6 +40,7 @@ function App() {
       .then((res) => res.json())
       .then((result) => {
         setData(data.concat(result.hits));
+        console.log(result.hits);
         SetCount(count + 1);
         console.log(count);
       });
@@ -46,7 +49,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<NewTable data={data} />} />
+        <Route index element={<NewTable data={data} />} />
+        <Route path="/page/:pageId" element={<NewTable data={data} />} />
+
         <Route path="/post/:postId" element={<JSON rows={data} />} />
       </Routes>
     </BrowserRouter>

@@ -6,8 +6,10 @@ import React from "react";
 
 const server = setupServer(
   rest.get(
-    "https://hn.algolia.com/api/v1/search_by_date?tags=story&page=0",
+    "https://hn.algolia.com/api/v1/search_by_date/",
+
     (req, res, ctx) => {
+      req.url.searchParams.get("?tags=story&page=0");
       return res(
         ctx.json({
           hits: [
@@ -740,9 +742,27 @@ const server = setupServer(
   )
 );
 
-beforeAll(() => server.listen());
+const originalError = console.error;
+beforeAll(() => {
+  server.listen();
+
+  console.error = (...args) => {
+    if (
+      /Warning: ReactDOM.render is no longer supported in React 18./.test(
+        args[0]
+      )
+    ) {
+      return;
+    }
+
+    originalError.call(console, ...args);
+  };
+});
 afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+afterAll(() => {
+  server.close();
+  console.error = originalError;
+});
 
 test("gets the data", async () => {
   render(<App />);
@@ -790,3 +810,15 @@ test("waits 10 second before loading new data and rerender", () => {
 
   doAsync();
 });
+/* test("every 10 sec should call setData and increase data length", () => {
+  render(<App />);
+  jest.useFakeTimers();
+  jest.spyOn(React, "useEffect").mockImplementation((f) => f());
+  jest.spyOn(global, "setInterval");
+  jest.advanceTimersByTime(10000);
+  // jest.runAllTimers();
+  // jest.runOnlyPendingTimers();
+  expect(setInterval).toHaveBeenCalledTimes(1);
+  jest.useRealTimers();
+});
+ */
